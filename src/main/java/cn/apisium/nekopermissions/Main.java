@@ -167,7 +167,7 @@ public final class Main extends JavaPlugin implements Listener {
                         map = new HashMap<>();
                         userToPerms.put(id, map);
                     }
-                    map.put(args[1], Boolean.valueOf(args[2]));
+                    map.put(args[2], args.length <= 3 || Boolean.parseBoolean(args[3]));
                 }
                 if (p.isOnline()) syncPlayer(Objects.requireNonNull(p.getPlayer()));
                 try {
