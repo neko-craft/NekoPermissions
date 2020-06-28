@@ -47,6 +47,7 @@ public final class Main extends JavaPlugin implements Listener {
     private final WeakHashMap<Player, PermissionAttachment> attachments = new WeakHashMap<>();
     private final HashMap<String, String> userToGroups = new HashMap<>();
     private final HashMap<String, HashMap<String, Boolean>> userToPerms = new HashMap<>();
+
     @Override
     public void onEnable() {
         try {
@@ -143,21 +144,21 @@ public final class Main extends JavaPlugin implements Listener {
                 if (p.isOnline()) syncPlayer(Objects.requireNonNull(p.getPlayer()));
                 try {
                     saveStorage();
-                    sender.sendMessage("§a保存成功!");
+                    sender.sendMessage("§c保存成功!");
                 } catch (IOException e) {
                     e.printStackTrace();
                     sender.sendMessage("§c保存失败!");
                 }
             }
-            case "set": { // set <player> <permission> [true/false]
-                if (args.length < 3) return false;
+            case "set": {
+                if (args.length < 2) return false;
                 final OfflinePlayer p = getPlayer(args[1], sender);
                 if (p == null) return true;
                 final String id = p.getUniqueId().toString();
                 HashMap<String, Boolean> map = userToPerms.get(id);
-                if (args.length == 3) {
+                if (args.length == 2) {
                     if (map != null) {
-                        map.remove(args[2]);
+                        map.remove(args[1]);
                         if (map.isEmpty()) userToPerms.remove(id);
                     }
                 } else {
@@ -165,12 +166,12 @@ public final class Main extends JavaPlugin implements Listener {
                         map = new HashMap<>();
                         userToPerms.put(id, map);
                     }
-                    map.put(args[2], Boolean.valueOf(args[3]));
+                    map.put(args[1], Boolean.valueOf(args[2]));
                 }
                 if (p.isOnline()) syncPlayer(Objects.requireNonNull(p.getPlayer()));
                 try {
                     saveStorage();
-                    sender.sendMessage("§a保存成功!");
+                    sender.sendMessage("§c保存成功!");
                 } catch (IOException e) {
                     e.printStackTrace();
                     sender.sendMessage("§c保存失败!");
