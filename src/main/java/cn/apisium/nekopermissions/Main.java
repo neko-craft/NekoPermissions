@@ -47,6 +47,7 @@ public final class Main extends JavaPlugin implements Listener {
     private final WeakHashMap<Player, PermissionAttachment> attachments = new WeakHashMap<>();
     private final HashMap<String, String> userToGroups = new HashMap<>();
     private final HashMap<String, HashMap<String, Boolean>> userToPerms = new HashMap<>();
+
     @Override
     public void onEnable() {
         try {
@@ -126,12 +127,12 @@ public final class Main extends JavaPlugin implements Listener {
                 }
                 break;
             case "list":
-                sender.sendMessage((TextComponent[]) getAllPerms().stream().sorted().map(it -> {
+                sender.sendMessage(getAllPerms().stream().sorted().map(it -> {
                     final TextComponent t = new TextComponent(it);
                     t.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
                             "/permission set WHO " + it + " true"));
                     return t;
-                }).toArray());
+                }).toArray(TextComponent[]::new));
                 break;
             case "group": {
                 if (args.length < 2) return false;
@@ -148,6 +149,7 @@ public final class Main extends JavaPlugin implements Listener {
                     e.printStackTrace();
                     sender.sendMessage("¡ìc±£´æÊ§°Ü!");
                 }
+                break;
             }
             case "set": { // set <player> <permission> [true/false]
                 if (args.length < 3) return false;
@@ -175,6 +177,7 @@ public final class Main extends JavaPlugin implements Listener {
                     e.printStackTrace();
                     sender.sendMessage("¡ìc±£´æÊ§°Ü!");
                 }
+                break;
             }
             default: return false;
         }
