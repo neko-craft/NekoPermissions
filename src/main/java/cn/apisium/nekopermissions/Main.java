@@ -126,12 +126,12 @@ public final class Main extends JavaPlugin implements Listener {
                 }
                 break;
             case "list":
-                sender.sendMessage((TextComponent[]) getAllPerms().stream().sorted().map(it -> {
-                    final TextComponent t = new TextComponent(it);
+                sender.sendMessage(getAllPerms().stream().sorted().map(it -> {
+                    final TextComponent t = new TextComponent(it + "\n");
                     t.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
                             "/permission set WHO " + it + " true"));
                     return t;
-                }).toArray());
+                }).toArray(TextComponent[]::new));
                 break;
             case "group": {
                 if (args.length < 2) return false;
