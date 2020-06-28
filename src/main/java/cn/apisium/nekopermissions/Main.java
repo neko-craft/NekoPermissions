@@ -47,6 +47,7 @@ public final class Main extends JavaPlugin implements Listener {
     private final WeakHashMap<Player, PermissionAttachment> attachments = new WeakHashMap<>();
     private final HashMap<String, String> userToGroups = new HashMap<>();
     private final HashMap<String, HashMap<String, Boolean>> userToPerms = new HashMap<>();
+
     @Override
     public void onEnable() {
         try {
@@ -149,6 +150,7 @@ public final class Main extends JavaPlugin implements Listener {
                     sender.sendMessage("°Ïc±£¥Ê ß∞‹!");
                 }
             }
+            break;
             case "set": {
                 if (args.length < 2) return false;
                 final OfflinePlayer p = getPlayer(args[1], sender);
@@ -176,7 +178,9 @@ public final class Main extends JavaPlugin implements Listener {
                     sender.sendMessage("°Ïc±£¥Ê ß∞‹!");
                 }
             }
-            default: return false;
+            break;
+            default:
+                return false;
         }
         return true;
     }
@@ -211,7 +215,8 @@ public final class Main extends JavaPlugin implements Listener {
                 }
             case 4:
                 return args[0].equals("set") ? Arrays.asList("true", "false") : null;
-            default: return null;
+            default:
+                return null;
         }
     }
 
