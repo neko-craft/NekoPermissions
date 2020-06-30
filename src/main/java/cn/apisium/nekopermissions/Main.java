@@ -51,7 +51,7 @@ public final class Main extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         try {
-            loadStorage();
+            loadStorage(true);
         } catch (IOException e) {
             e.printStackTrace();
             setEnabled(false);
@@ -88,12 +88,12 @@ public final class Main extends JavaPlugin implements Listener {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void loadStorage() throws IOException {
+    private void loadStorage(final boolean init) throws IOException {
         if (!getDataFolder().exists()) getDataFolder().mkdir();
         if (!CONFIG_FILE.exists()) Files.write(CONFIG_PATH, "{}".getBytes());
         userToGroups.clear();
         userToPerms.clear();
-        getServer().reloadPermissions();
+        if (!init) getServer().reloadPermissions();
         new JsonParser().parse(Files.newBufferedReader(CONFIG_PATH)).getAsJsonObject().entrySet().forEach(it -> {
             final JsonElement v = it.getValue();
             if (v.isJsonPrimitive()) userToGroups.put(it.getKey(), v.getAsString());
@@ -119,7 +119,7 @@ public final class Main extends JavaPlugin implements Listener {
         switch (args[0]) {
             case "reload":
                 try {
-                    loadStorage();
+                    loadStorage(false);
                     sender.sendMessage("°Ïa÷ÿ‘ÿ≥…π¶!");
                 } catch (IOException e) {
                     e.printStackTrace();
