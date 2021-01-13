@@ -112,6 +112,29 @@ public final class Main extends JavaPlugin implements Listener {
         syncPlayers();
     }
 
+    private String formatPermissions(final String node) {
+        final StringBuilder sb = new StringBuilder();
+        formatPermissions(node, sb, true, 0);
+        return sb.toString();
+    }
+    private String formatPermissions(final Map<String, Boolean> map) {
+        final StringBuilder sb = new StringBuilder();
+        if (!map.isEmpty()) map.forEach((k, v) -> formatPermissions(k, sb, v, 0));
+        return sb.toString();
+    }
+    private void formatPermissions(final String node, final StringBuilder sb, final boolean type, final int start) {
+        final org.bukkit.permissions.Permission perm = getServer().getPluginManager().getPermission(node);
+        if (perm == null) return;
+        for (int i = 0; i < start; i++) sb.append(' ');
+        sb.append(type ? "§a+§f" : "§c-§f").append(node);
+        final Map<String, Boolean> map = perm.getChildren();
+        if (!map.isEmpty()) {
+            sb.append(":\n");
+            final int j = start + 2;
+            map.forEach((k, v) -> formatPermissions(k, sb, v, j));
+        } else sb.append('\n');
+    }
+
     @SuppressWarnings("NullableProblems")
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
@@ -127,12 +150,21 @@ public final class Main extends JavaPlugin implements Listener {
                 }
                 break;
             case "list":
-                sender.sendMessage(getAllPerms().stream().sorted().map(it -> {
+                if (args.length == 1) sender.sendMessage(getAllPerms().stream().sorted().map(it -> {
                     final TextComponent t = new TextComponent(it + "\n");
                     t.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
                             "/permission set WHO " + it + " true"));
                     return t;
                 }).toArray(TextComponent[]::new));
+                else {
+                    final Player p = getServer().getPlayerExact(args[1]);
+                    if (p == null) {
+                        sender.sendMessage("§c找不到该玩家!");
+                        return true;
+                    }
+                    final PermissionAttachment attachment = attachments.get(p);
+                    if (attachment != null) sender.sendMessage(formatPermissions(attachment.getPermissions()));
+                }
                 break;
             case "group": {
                 if (args.length < 2) return false;
@@ -247,8 +279,13 @@ public final class Main extends JavaPlugin implements Listener {
         final boolean hasGroup = userToGroups.containsKey(id), hasPerms = userToPerms.containsKey(id);
         if (!hasGroup && !hasPerms) return;
         attach = p.addAttachment(this);
-        if (hasGroup) attach.setPermission(Objects.requireNonNull(getServer().getPluginManager()
-                .getPermission(userToGroups.get(id))), true);
+        attachments.put(p, attach);
+        if (hasGroup) {
+            final String group = userToGroups.get(id);
+            final org.bukkit.permissions.Permission perm = getServer().getPluginManager().getPermission(group);
+            if (perm == null) getLogger().warning("No such group: " + group);
+                else attach.setPermission(perm, true);
+        }
         if (hasPerms) userToPerms.get(id).forEach(attach::setPermission);
     }
 }
