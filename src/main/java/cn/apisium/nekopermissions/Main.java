@@ -125,7 +125,7 @@ public final class Main extends JavaPlugin implements Listener {
     private void formatPermissions(final String node, final StringBuilder sb, final boolean type, final int start) {
         final org.bukkit.permissions.Permission perm = getServer().getPluginManager().getPermission(node);
         if (perm == null) return;
-        for (int i = 0; i < start; i++) sb.append(' ');
+        sb.append(" ".repeat(Math.max(0, start)));
         sb.append(type ? "¡ìa+¡ìf" : "¡ìc-¡ìf").append(node);
         final Map<String, Boolean> map = perm.getChildren();
         if (!map.isEmpty()) {
@@ -135,7 +135,7 @@ public final class Main extends JavaPlugin implements Listener {
         } else sb.append('\n');
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "deprecation"})
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
         if (args.length < 1) return false;

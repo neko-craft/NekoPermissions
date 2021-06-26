@@ -9,8 +9,12 @@ version = '1.0.0-SNAPSHOT'
 repositories {
     mavenCentral()
     maven {
-        name = 'destroystokyo-repo'
-        url = 'https://repo.destroystokyo.com/repository/maven-public/'
+        name = 'jitpack'
+        url = 'https://jitpack.io'
+    }
+    maven {
+        name = 'papermc'
+        url = 'https://papermc.io/repo/repository/maven-public/'
     }
     maven {
         name = 'sonatype'
@@ -20,7 +24,8 @@ repositories {
 
 dependencies {
     compileOnly 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT'
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
 
     annotationProcessor 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
 }
