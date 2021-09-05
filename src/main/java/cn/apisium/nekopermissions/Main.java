@@ -287,5 +287,9 @@ public final class Main extends JavaPlugin implements Listener {
                 else attach.setPermission(perm, true);
         }
         if (hasPerms) userToPerms.get(id).forEach(attach::setPermission);
+        synchronized (attach.getPermissible()) {
+            attach.getPermissible().recalculatePermissions();
+            p.updateCommands();
+        }
     }
 }
